@@ -1065,6 +1065,7 @@ return resultArray
 async function numbers_profiles(numberList,bundleList,accountsidcheck,bundlesidcheck,filter){
   const sidArray = []
   const arraySids = []
+  var customerCounter = 0;
 
   //make array
  // const numbersArray = numberList.split(',');
@@ -1169,19 +1170,35 @@ while (page_url !== null) {
 
 
 
-        const test = data.reduce((acc, t) => {
-                const pnSID = t.channel_endpoint_sid || t.channelEndpointSid;
-                const customerSid = t.customerProfileSid ||t.customer_profile_sid;
-                if (!acc[pnSID]) {
-                    acc[pnSID] = { accountSID: CustomerProfile[i].accountSID, [CustomerProfile[i].policyID]: customerSid};
-                } else {
-                    acc[pnSID][CustomerProfile[i].policyID] = customerSid;
-                }
-                return acc;
-            }, {});
+const test = {};
+const promises = [];
+
+for (let j = 0; j < data.length; j++) {
+    const t = data[j];
+    console.log(t)
+    const pnSID = t.channel_endpoint_sid || t.channelEndpointSid;
+    const customerSid = t.customerProfileSid || t.customer_profile_sid;
+    if (!test[pnSID]) {
+            customerCounter++;
+            responseContainer.innerHTML = `LOADING ${customerCounter} numbers have been processed`;
+            if (customerCounter % 25 === 0) {
+            await delay(1000);
+            }
+        const promise = SidtoNumber(pnSID, CustomerProfile[i].accountSID)
+            .then(phoneNumber => {
+                test[pnSID] = { 'Phone Number': phoneNumber, accountSID: CustomerProfile[i].accountSID, [CustomerProfile[i].policyID]: customerSid};
+            });
+        promises.push(promise);
+    } else {
+        test[pnSID][CustomerProfile[j].policyID] = customerSid;
+    }
+}
+
+await Promise.all(promises);
 
 
 
+//const phoneNumber = await SidtoNumber(pnSID, CustomerProfile[i].accountSID);
 
     // Merge entries with the same pnSID
     Object.keys(test).forEach(pnSID => {
@@ -1240,18 +1257,46 @@ for (let i = 0; i < trustProfileSids.length; i++) {
       page_url = tempdata[1];
     }
  
+
+ /*
        const test = data.reduce((acc, t) => {
                 const pnSID = t.channel_endpoint_sid || t.channelEndpointSid;
                 const trustSid = t.trustProductSid ||t.trust_product_sid;
                 if (!acc[pnSID]) {
                     acc[pnSID] = {accountSID: trustProfileSids[i].accountSID, [trustProfileSids[i].policyID]: trustSid};
+                    
                 } else {
                     acc[pnSID][trustProfileSids[i].policyID] = trustSid;
                 }
                 return acc;
             }, {});
 
+*/
 
+const test = {};
+const promises = [];
+
+for (let j = 0; j < data.length; j++) {
+    const t = data[j];
+    const pnSID = t.channel_endpoint_sid || t.channelEndpointSid;
+    const trustSid = t.trustProductSid ||t.trust_product_sid;
+    if (!test[pnSID]) {
+            customerCounter++;
+            responseContainer.innerHTML = `LOADING ${customerCounter} numbers have been processed`;
+            if (customerCounter % 25 === 0) {
+            await delay(1000);
+            }
+        const promise = SidtoNumber(pnSID, trustProfileSids[i].accountSID)
+            .then(phoneNumber => {
+                test[pnSID] = {'Phone Number': phoneNumber, accountSID: trustProfileSids[i].accountSID, [trustProfileSids[i].policyID]: trustSid};
+            });
+        promises.push(promise);
+    } else {
+        test[pnSID][trustProfileSids[j].policyID] = trustSid;
+    }
+}
+
+await Promise.all(promises);
 
 
 
@@ -1326,7 +1371,7 @@ for (const [key, value] of Object.entries(resultDictionary)) {
 
 }
 */
-
+/*
 for (const [key, value] of Object.entries(resultDictionary)) {
   const promise = (async (k, v) => {
     const phoneNumber = await SidtoNumber(k, v.accountSID, v.token);
@@ -1342,7 +1387,7 @@ for (const [key, value] of Object.entries(resultDictionary)) {
 }
   // Wait for all promises to resolve
 await Promise.all(promises);
-
+*/
 return resultDictionary
 
 }
