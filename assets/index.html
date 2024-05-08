@@ -261,8 +261,7 @@ Because this is a publicly accessible URL that automatically uses your Account S
       <span>We can't wait to see what you build.</span>
     </footer>
 
-   
-<!-- Script to change input to numbers only -->
+
     <script>
 
 
@@ -405,11 +404,7 @@ return document.body.removeChild(a);
             var SelectedBundles = Array.from(form.elements['regulationBundles'])
                 .filter(checkbox => checkbox.checked)
                 .map(checkbox => checkbox.value);
-/*
-                const phoneNumberInput = document.getElementById('phoneNumbersInput');
-                const phoneNumberValue = phoneNumberInput.value;
-                //console.log(phoneNumberValue)
-*/
+
 
 
             // Example: Log selected features to console
@@ -704,7 +699,7 @@ const promises = [];
     
       responsedic[number.number][bundle] = number.error
     }
-       else if (info === 'customer') {
+       else if (bundle.type === 'customer') {
         promises.push(assign_number_customer(bundle, number.sid, accountValue, number.number)
           .then(response => {
             if (!responsedic.hasOwnProperty(response[0][0])) {
