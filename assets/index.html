@@ -572,7 +572,7 @@ async function deleteNumber() {
                       }
                       responsedic[response[0][0]][response[0][1]] = response[0][2];
                     })
-                    .catch(error => console.error('Error assigning number to customer:', error)));  
+                    .catch(error => console.error('Error removing number from customer:', error)));  
                     
                 }
 
@@ -587,7 +587,7 @@ async function deleteNumber() {
                       }
                       responsedic[response[0][0]][response[0][1]] = response[0][2];
                     })
-                    .catch(error => console.error('Error assigning number to customer:', error)));           
+                    .catch(error => console.error('Error removing number from customer:', error)));           
                 }
                 else {
                 if (!responsedic.hasOwnProperty(number[1])) {
@@ -693,13 +693,16 @@ const promises = [];
       responseContainer.innerHTML = `LOADING ${count} assignments have been processed`;
 
         if ('error' in number) {
+          console.log("errrorhere")
           if (!responsedic.hasOwnProperty(number.number)) {
               responsedic[number.number] = {};
             } 
     
       responsedic[number.number][bundle] = number.error
     }
-       else if (bundle.type === 'customer') {
+       else if (info === 'customer') {
+         console.log("businesshere")
+
         promises.push(assign_number_customer(bundle, number.sid, accountValue, number.number)
           .then(response => {
             if (!responsedic.hasOwnProperty(response[0][0])) {
@@ -709,6 +712,7 @@ const promises = [];
           })
           .catch(error => console.error('Error assigning number to customer:', error)));
       } else if (info === 'trust') {
+        console.log("trusthere")
         promises.push(assign_number_trust(bundle, number.sid, accountValue, number.number)
           .then(response => {
             if (!responsedic.hasOwnProperty(response[0][0])) {
@@ -718,6 +722,7 @@ const promises = [];
           })
           .catch(error => console.error('Error assigning number to trust:', error)));
       } else {
+        console.log("elese")
         if (!responsedic.hasOwnProperty(number.number)) {
           responsedic[number.number] = {};
         }
