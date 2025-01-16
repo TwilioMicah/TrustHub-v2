@@ -579,8 +579,8 @@ async function deleteNumber() {
                 else if (info == 'trust'){
 
                   
-                  
-                  promises.push(delete_number_trust(bundle, bvSID[number.sid], accountValue, number.number)
+      
+                  promises.push(delete_number_trust(bundle, raSID[number.sid], accountValue, number.number)
                     .then(response => {
                       if (!responsedic.hasOwnProperty(response[0][0])) {
                         responsedic[response[0][0]] = {};
@@ -659,7 +659,6 @@ async function assignNumber() {
             }
 
   const numbers = await get_pn_sids(phoneNumberValue, accountValue)
-  console.log(numbers)
   const dataArray = await fetchAccountdata();
   const bundles = await processDataArray(dataArray, '', '')
 
@@ -701,7 +700,6 @@ const promises = [];
       responsedic[number.number][bundle] = number.error
     }
        else if (info === 'customer') {
-         console.log("businesshere")
 
         promises.push(assign_number_customer(bundle, number.sid, accountValue, number.number)
           .then(response => {
@@ -712,7 +710,7 @@ const promises = [];
           })
           .catch(error => console.error('Error assigning number to customer:', error)));
       } else if (info === 'trust') {
-        console.log("trusthere")
+
         promises.push(assign_number_trust(bundle, number.sid, accountValue, number.number)
           .then(response => {
             if (!responsedic.hasOwnProperty(response[0][0])) {
@@ -722,7 +720,7 @@ const promises = [];
           })
           .catch(error => console.error('Error assigning number to trust:', error)));
       } else {
-        console.log("elese")
+  
         if (!responsedic.hasOwnProperty(number.number)) {
           responsedic[number.number] = {};
         }
@@ -1164,7 +1162,7 @@ const promises = [];
 
 for (let j = 0; j < data.length; j++) {
     const t = data[j];
-    console.log(t)
+
     const pnSID = t.channel_endpoint_sid || t.channelEndpointSid;
     const customerSid = t.customerProfileSid || t.customer_profile_sid;
     if (!test[pnSID]) {
