@@ -213,27 +213,37 @@ return callback(null, null);
 }
 }
 
-async function sidtonumber(number,accountSid,authToken,subaccountSID){
+async function sidtonumber(number, accountSid, authToken, subaccountSID) {
+  try {
+    const twilio = require("twilio");
+    
+    // Initialize Twilio client with main account credentials
+    const clientTemp = twilio(accountSid, authToken);
 
-  
-  const clienttemp = require("twilio")(
-  accountSid,
-  authToken)
+    // Fetch subaccount auth token
+    const token = await clientTemp.api.v2010.accounts(subaccountSID)
+      .fetch()
+      .then(account => account.authToken)
+      .catch(error => {
+        throw new Error(`Failed to fetch subaccount auth token: ${error.message}`);
+      });
 
- const token =  await clienttemp.api.v2010.accounts(subaccountSID)
-  .fetch()
-  .then(account => account.authToken);
-  
-  const client = require("twilio")(
-    subaccountSID,
-    token);
+    // Initialize Twilio client with subaccount credentials
+    const client = twilio(subaccountSID, token);
 
+    // Fetch incoming phone number details
+    const incomingPhoneNumber = await client.incomingPhoneNumbers(number)
+      .fetch()
+      .catch(error => {
+        throw new Error(`Failed to fetch phone number: ${error.message}`);
+      });
 
-    const incoming_phone_number = await client.incomingPhoneNumbers(number).fetch();
-
-
-  return callback(null, incoming_phone_number);
+    return callback(null, incomingPhoneNumber);
+  } catch (error) {
+    return callback(error, null);
+  }
 }
+
 
 async function pn_sids(number,accountSid,authToken,subaccountSID){
 
