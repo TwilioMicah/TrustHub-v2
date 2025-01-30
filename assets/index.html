@@ -692,7 +692,7 @@ const promises = [];
       responseContainer.innerHTML = `LOADING ${count} assignments have been processed`;
 
         if ('error' in number) {
-          console.log("errrorhere")
+          console.log("errrorhere",number)
           if (!responsedic.hasOwnProperty(number.number)) {
               responsedic[number.number] = {};
             } 
@@ -1155,7 +1155,7 @@ while (page_url !== null) {
   page_url = tempdata[1];
 }
 
-
+console.log(data,"channel endpoint objects")
 
 const test = {};
 const promises = [];
@@ -1183,7 +1183,7 @@ for (let j = 0; j < data.length; j++) {
 
 await Promise.all(promises);
 
-
+console.log(test,"constructed dictionary with keys")
 
 //const phoneNumber = await SidtoNumber(pnSID, CustomerProfile[i].accountSID);
 
@@ -1320,7 +1320,7 @@ arraySids.forEach(item => {
   let count = 0;
   const promises = [];
 
-
+console.log(resultDictionary,"results that will be returned")
 return resultDictionary
 
 }
